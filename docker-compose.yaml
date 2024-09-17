@@ -1,0 +1,14 @@
+services:
+  consumer-service:
+    image: consumer-service
+    build:
+      context: ./consumer
+    ports:
+      - "8081:8081"
+
+  producer-service:
+    image: producer-service
+    build:
+      context: ./producer
+    ports:
+      - "8082:8082"
