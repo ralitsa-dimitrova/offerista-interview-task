@@ -1,11 +1,14 @@
 package com.offerista.interviewtask.consumer;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PrimeNumberUtils {
+@Service
+public class PrimeNumberTransformer implements DataTransformer<Integer> {
 
-    public static boolean isPrime(int number) {
+    public boolean isPrime(int number) {
         if (number <= 1) return false;
         for (int i = 2; i <= Math.sqrt(number); i++) {
             if (number % i == 0) return false;
@@ -13,9 +16,9 @@ public class PrimeNumberUtils {
         return true;
     }
 
-    public static List<Integer> filterPrimes(List<Integer> numbers) {
-        return numbers.stream()
-                .filter(PrimeNumberUtils::isPrime)
+    public List<Integer> transform(List<Integer> data) {
+        return data.stream()
+                .filter(this::isPrime)
                 .collect(Collectors.toList());
     }
 }
