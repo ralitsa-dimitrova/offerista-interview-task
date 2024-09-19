@@ -4,20 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.offerista.interviewtask.producer.ProducerConstants.*;
+
 @Service
 public class SchedulerService {
-
-    private static final int MAX_STREAM_SIZE = 100;
-    private static final int MAX_NUMBERS_PER_BATCH = 5;
-    private static final int BATCH_PERIOD_MS = 5;
-    private final AtomicInteger totalNumbersSent = new AtomicInteger(0);
-
     private final NumberGeneratorService numberGeneratorService;
     private final SenderService senderService;
     private final CSVWriterService csvWriterService;
+
+    private int totalNumbersSent = 0;
 
     @Autowired
     public SchedulerService(NumberGeneratorService numberGeneratorService, SenderService senderService, CSVWriterService csvWriterService) {
@@ -26,18 +25,18 @@ public class SchedulerService {
         this.csvWriterService = csvWriterService;
     }
 
-    @Scheduled(fixedRate = BATCH_PERIOD_MS)
-    public void generateAndSendNumbers() {
-        if (totalNumbersSent.get() >= MAX_STREAM_SIZE) {
+    @Scheduled(fixedRate = BATCH_PERIOD_MS, initialDelay = INITIAL_DELAY)
+    public void generateAndSendNumberBatch() {
+        if (totalNumbersSent >= MAX_STREAM_SIZE) {
             return;
         }
 
-        List<Integer> numbers = numberGeneratorService.generateNumbers(MAX_NUMBERS_PER_BATCH, MAX_STREAM_SIZE - totalNumbersSent.get());
-        totalNumbersSent.addAndGet(numbers.size());
+        List<Integer> numberBatch = numberGeneratorService.generateNumbers(MAX_NUMBERS_PER_BATCH, MAX_STREAM_SIZE - totalNumbersSent);
+        totalNumbersSent++;
 
-        if (!numbers.isEmpty()) {
-            senderService.sendNumbers(numbers);
-            csvWriterService.writeListToCSV(numbers);
+        if (!numberBatch.isEmpty()) {
+            senderService.sendNumbers(numberBatch);
+            csvWriterService.writeListToCSV(numberBatch);
         }
     }
 }
