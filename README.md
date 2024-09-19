@@ -15,6 +15,8 @@ To minimize dependencies between classes, generic interfaces are provided, makin
 
 This design allows for easy extension of the system with minimal changes to the existing codebase. You can easily swap out or add new implementations for data generation, sending, or processing as needed.
 
+Note: There's some data duplication in the CSV writing logic, which is identical for the producer and the consumer. This is unavoidable because building a shared library for this would be overkill for the current scope of the project.
+
 ## Setup Instructions
 
 Before running the services, ensure that you have **Docker** and **Maven** installed on your machine.
