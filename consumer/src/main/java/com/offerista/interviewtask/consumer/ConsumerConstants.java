@@ -4,7 +4,7 @@ public class ConsumerConstants {
 
     public static final String BASE_API_PATH = "/api";
     public static final String PROCESS_DATA_PATH = "/processData";
-    public static final String PROCESS_DATA_ENDPOINT = BASE_API_PATH + PROCESS_DATA_PATH + "/integer";
+    public static final String PROCESS_NUMERIC_DATA_ENDPOINT = BASE_API_PATH + PROCESS_DATA_PATH + "/integer";
 
     public static final String CSV_FILE_PATH = "processedData.csv";
 

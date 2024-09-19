@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static com.offerista.interviewtask.consumer.ConsumerConstants.*;
 import static org.mockito.Mockito.*;
@@ -26,9 +29,16 @@ class DataProcessingControllerTest {
     @MockBean
     private DataSaver dataSaver;
 
+    @MockBean
+    private DataTransformer transformer;
+
+    private static final List<Integer> INPUT_LIST = Arrays.asList(1, 2, 3, 4, 5);
+    private static final List<Integer> PRIME_LIST = Arrays.asList(2, 3, 5);
+
     @Test
     public void testProcessDataEndpoint() throws Exception {
-        mockMvc.perform(post(PROCESS_DATA_ENDPOINT)
+        when(transformer.transform(INPUT_LIST)).thenReturn(PRIME_LIST);
+        mockMvc.perform(post(PROCESS_NUMERIC_DATA_ENDPOINT)
                         .content("[1, 2, 3, 4, 5]")
                         .contentType("application/json"))
                 .andExpect(status().isOk())
@@ -39,9 +49,11 @@ class DataProcessingControllerTest {
 
     @Test
     public void testProcessDataWithEmptyList() throws Exception {
-        mockMvc.perform(post(PROCESS_DATA_ENDPOINT)
+        when(transformer.transform(Collections.emptyList())).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(post(PROCESS_NUMERIC_DATA_ENDPOINT)
                         .content("[]")
-                        .contentType("application/json"))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(PROCESS_DATA_SUCCESS_MESSAGE));
 
