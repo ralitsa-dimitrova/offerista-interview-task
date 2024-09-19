@@ -1,8 +1,19 @@
 # Prime Number Application - Producer & Consumer
 ## Table of Contents
+- [Implementation Overview](#implementation-overview)
 - [Setup Instructions](#setup-instructions)
 - [Testing & Validation](#testing--validation)
+## Implementation Overview
 
+The producer microservice contains a `DataGenerationScheduler` class that is responsible for scheduling the generation and sending of data to the consumer service. The scheduler sends batches of 1-5 numbers at regular intervals until 100 numbers have been sent. These numbers are sent to the consumer's exposed REST API `POST` handler in `DataProcessingController#processData` located at:
+
+
+To minimize dependencies between classes, generic interfaces are provided, making the system easy to extend in the future. Consider the following modifications:
+- Maybe we would want the consumer to find all even numbers, instead of primes
+- Make the consumer and the producer save the numbers to a database, instead of a CSV file
+- The producer to send string data instead of integers.
+
+This design allows for easy extension of the system with minimal changes to the existing codebase. You can easily swap out or add new implementations for data generation, sending, or processing as needed.
 
 ## Setup Instructions
 
