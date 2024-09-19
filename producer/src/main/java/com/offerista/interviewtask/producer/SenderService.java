@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class SenderService {
     private final RestTemplate restTemplate;
-    private final String consumerUrl = "http://localhost:8081/receiveNumbers"; // Change to your target microservice URL
+    private final String consumerUrl = "http://consumer-service:8081/receiveNumbers"; // Change to your target microservice URL
 
     @Autowired
     public SenderService(RestTemplate restTemplate) {
